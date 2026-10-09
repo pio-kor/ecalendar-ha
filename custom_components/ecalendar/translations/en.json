@@ -1,0 +1,91 @@
+{
+  "title": "e-Calendar",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect e-Calendar",
+        "description": "Enter the ESP MAC address. Uses the MQTT integration already configured in Home Assistant.",
+        "data": {
+          "mac": "ESP MAC address"
+        }
+      }
+    },
+    "error": {
+      "invalid_mac": "Enter a valid MAC address."
+    },
+    "abort": {
+      "already_configured": "This calendar is already configured."
+    }
+  },
+  "services": {
+    "add_event": {
+      "name": "Add event",
+      "description": "Save an event with start and end for HA automations. Recurrence keeps its duration.",
+      "fields": {
+        "entity_id": {
+          "name": "Calendar"
+        },
+        "name": {
+          "name": "Event title"
+        },
+        "date": {
+          "name": "Start date"
+        },
+        "time": {
+          "name": "Time (optional)",
+          "description": "Omit for an all-day event. Seconds must be zero."
+        },
+        "advance_days": {
+          "name": "Show in advance"
+        },
+        "repeat": {
+          "name": "Repeat"
+        },
+        "monthly_occurrence": {
+          "name": "Occurrence in month",
+          "description": "Used only by the monthly weekday rule."
+        },
+        "monthly_weekday": {
+          "name": "Weekday"
+        },
+        "anniversary": {
+          "name": "Calculate age or anniversary",
+          "description": "Requires yearly recurrence."
+        },
+        "anniversary_base": {
+          "name": "Age or anniversary in the starting year"
+        },
+        "end_date": {
+          "name": "End date (optional)",
+          "description": "For all-day events choose the last included day. Empty means same day. Maximum date difference: 366 days."
+        },
+        "end_time": {
+          "name": "End time (optional)",
+          "description": "Provide both times. End must follow start."
+        }
+      }
+    },
+    "delete_event": {
+      "name": "Delete event",
+      "description": "Delete the entire stored event, including all occurrences of a recurring series.",
+      "fields": {
+        "entity_id": {
+          "name": "Calendar"
+        },
+        "event_id": {
+          "name": "Event identifier",
+          "description": "Use event_id from the Next event entity, or stored_events on the Calendar entity."
+        }
+      }
+    },
+    "refresh_events": {
+      "name": "Fetch events",
+      "description": "Fetch the device event list without refreshing its physical screen.",
+      "fields": {
+        "entity_id": {
+          "name": "Calendar"
+        }
+      }
+    }
+  }
+}

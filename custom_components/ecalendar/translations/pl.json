@@ -1,0 +1,91 @@
+{
+  "title": "e-Calendar",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Połącz e-Calendar",
+        "description": "Wpisz MAC kalendarza. Integracja korzysta z MQTT już skonfigurowanego w Home Assistant. Nie wpisuj adresu IP ani hasła brokera.",
+        "data": {
+          "mac": "Adres MAC ESP (np. 68:ee:8f:4d:0b:c0)"
+        }
+      }
+    },
+    "error": {
+      "invalid_mac": "Podaj 12 cyfr szesnastkowych lub MAC z dwukropkami."
+    },
+    "abort": {
+      "already_configured": "Ten kalendarz jest już dodany."
+    }
+  },
+  "services": {
+    "add_event": {
+      "name": "Dodaj wydarzenie",
+      "description": "Zapisz wydarzenie z początkiem i końcem dla automatyzacji HA. Powtarzanie zachowuje czas trwania.",
+      "fields": {
+        "entity_id": {
+          "name": "Kalendarz"
+        },
+        "name": {
+          "name": "Nazwa wydarzenia"
+        },
+        "date": {
+          "name": "Data początkowa"
+        },
+        "time": {
+          "name": "Godzina (opcjonalnie)",
+          "description": "Pomiń dla wydarzenia całodniowego. Sekundy muszą wynosić zero."
+        },
+        "advance_days": {
+          "name": "Wyświetlaj wcześniej"
+        },
+        "repeat": {
+          "name": "Powtarzanie"
+        },
+        "monthly_occurrence": {
+          "name": "Który dzień w miesiącu",
+          "description": "Tylko dla reguły miesięcznej."
+        },
+        "monthly_weekday": {
+          "name": "Dzień tygodnia"
+        },
+        "anniversary": {
+          "name": "Obliczaj wiek lub rocznicę",
+          "description": "Wymaga powtarzania co rok."
+        },
+        "anniversary_base": {
+          "name": "Wiek lub numer rocznicy w roku początkowym"
+        },
+        "end_date": {
+          "name": "Koniec — data (opcjonalnie)",
+          "description": "Dla całego dnia wybierz ostatni dzień włącznie. Puste pole oznacza ten sam dzień. Maksymalna różnica dat: 366 dni."
+        },
+        "end_time": {
+          "name": "Koniec — godzina (opcjonalnie)",
+          "description": "Podaj obie godziny. Koniec musi być późniejszy niż początek."
+        }
+      }
+    },
+    "delete_event": {
+      "name": "Usuń wydarzenie",
+      "description": "Usuwa cały wpis, także całą serię cykliczną. Najwygodniejsze usuwanie jest w panelu e-Calendar.",
+      "fields": {
+        "entity_id": {
+          "name": "Kalendarz"
+        },
+        "event_id": {
+          "name": "Identyfikator wydarzenia",
+          "description": "Atrybut event_id encji Najbliższe wydarzenie lub identyfikator z stored_events encji Kalendarz."
+        }
+      }
+    },
+    "refresh_events": {
+      "name": "Pobierz wydarzenia",
+      "description": "Pobiera aktualną listę z urządzenia; nie odświeża fizycznego ekranu.",
+      "fields": {
+        "entity_id": {
+          "name": "Kalendarz"
+        }
+      }
+    }
+  }
+}
