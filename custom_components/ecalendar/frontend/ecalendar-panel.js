@@ -1,4 +1,4 @@
-/* e-Calendar panel 0.9.2. No external dependencies or cloud requests. */
+/* e-Calendar panel 0.9.4. No external dependencies or cloud requests. */
 class ECalendarPanel extends HTMLElement {
   set hass(value) { this._hass = value; if (this.isConnected) this.start(); }
   connectedCallback() { this.start(); }
@@ -6,6 +6,7 @@ class ECalendarPanel extends HTMLElement {
   start() {
     if (!this._hass) return;
     if (!this.shadowRoot) this.build();
+    this.toggleAttribute("ec-dark", Boolean(this._hass.themes?.darkMode));
     if (!this.timer) {
       this.poll();
       this.timer = setInterval(() => { if (!document.hidden) this.poll(); }, 4000);
@@ -38,7 +39,8 @@ class ECalendarPanel extends HTMLElement {
       .month-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.month-toolbar h2{margin:0;text-transform:capitalize}.month-scroll{overflow-x:auto}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-width:560px;border-top:1px solid var(--divider-color,#ddd);border-left:1px solid var(--divider-color,#ddd)}
       .month-head{text-align:center;font-size:12px;font-weight:bold;padding:10px 4px;border-right:1px solid var(--divider-color,#ddd);border-bottom:1px solid var(--divider-color,#ddd)}.month-week{grid-column:1 / -1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-height:100px}.month-cell{cursor:pointer;min-height:0;min-width:0;padding:5px;border-right:1px solid var(--divider-color,#ddd);border-bottom:1px solid var(--divider-color,#ddd)}.month-cell.outside{background:var(--secondary-background-color,#eee)}.month-day{background:transparent;color:inherit;padding:4px 8px;font-size:14px;display:block;margin-bottom:5px}.month-cell.outside .month-day{color:var(--secondary-text-color,#888)}.month-day.today{background:var(--primary-color,#1463ba);color:white;border-radius:50%}.month-event{z-index:1;align-self:start;display:block;width:100%;text-align:left;padding:5px 6px;margin:4px 0;font-size:12px;line-height:1.35;overflow-wrap:anywhere}.month-detail{padding:12px;margin-top:12px;border:1px solid var(--divider-color,#ddd);border-radius:8px;line-height:1.5;white-space:pre-line}
       dialog{background:var(--card-background-color,white);color:inherit;border:1px solid var(--divider-color,#ddd);border-radius:16px;padding:24px;width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 40px);overflow:auto;box-shadow:0 12px 48px #0006}dialog::backdrop{background:#0008}dialog h2{margin:0}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.dialog-heading button{background:transparent;color:inherit;font-size:24px;padding:4px 10px}.dialog-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}#dialog-feedback:empty{display:none}#dialog-feedback{line-height:1.5;margin-top:15px}#dialog-feedback.error{color:#c31635}.event-actions{display:flex;justify-content:flex-end;margin:16px 0 20px}.time-fields{margin:18px 0}.time-fields input[type=time]{max-width:180px}#dialog-target{margin:0 0 18px}
-    </style><header><strong><em>e</em>-Calendar</strong></header>
+    header img{flex-shrink:0;object-fit:contain}header .ec-logo-dark{display:none}:host([ec-dark]) header .ec-logo-light{display:none}:host([ec-dark]) header .ec-logo-dark{display:block}
+    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.4" alt="" width="40" height="40"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.4" alt="" width="40" height="40"><strong><em>e</em>-Calendar</strong></header>
     <main><nav class="tabs" role="tablist" aria-label="Panel kalendarza"><button id="tab-start" role="tab" aria-selected="true" aria-controls="view-start" tabindex="0">Start</button><button id="tab-events" role="tab" aria-selected="false" aria-controls="view-events" tabindex="-1">Wydarzenia</button><button id="tab-device" role="tab" aria-selected="false" aria-controls="view-device" tabindex="-1">Urządzenie</button></nav>
     <div id="feedback" role="status" aria-live="polite"></div>
     <div class="bar"><select id="devices" aria-label="Kalendarz"></select><span id="simple-status" role="status"></span><button id="refresh-home">Odśwież</button></div><div id="view-start" role="tabpanel" aria-labelledby="tab-start">
