@@ -1,5 +1,8 @@
 # Zmiany
 
+## 0.9.8
+- Komunikaty o pobieraniu i zapisie wydarzeń przeniesione pod dolny pasek wyboru kalendarza i odświeżania.
+
 ## 0.9.7
 - Wybór kalendarza i stan połączenia przeniesione na dół panelu.
 - Szerokość wyboru urządzenia dopasowana do karty daty także na mniejszych ekranach.

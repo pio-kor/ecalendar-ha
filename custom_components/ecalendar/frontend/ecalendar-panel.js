@@ -1,4 +1,4 @@
-/* e-Calendar panel 0.9.7. No external dependencies or cloud requests. */
+/* e-Calendar panel 0.9.8. No external dependencies or cloud requests. */
 class ECalendarPanel extends HTMLElement {
   set hass(value) { this._hass = value; if (this.isConnected) this.start(); }
   connectedCallback() { this.start(); }
@@ -45,9 +45,9 @@ class ECalendarPanel extends HTMLElement {
     .mini-month td{padding:2px 0;font-size:13px}.mini-month td span{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%}
     .mini-month .sunday{color:var(--error-color,#db5264)}.mini-month .selected span{background:var(--primary-color,#1463ba);color:var(--text-primary-color,#fff);font-weight:bold}
     header img{display:block;flex-shrink:0;width:220px;max-width:100%;height:auto;object-fit:contain}header .ec-logo-dark{display:none}:host([ec-dark]) header .ec-logo-light{display:none}:host([ec-dark]) header .ec-logo-dark{display:block}
-    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.7" alt="eCalendar" width="220" height="34"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.7" alt="eCalendar" width="220" height="34"></header>
+    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.8" alt="eCalendar" width="220" height="34"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.8" alt="eCalendar" width="220" height="34"></header>
     <main><nav class="tabs" role="tablist" aria-label="Panel kalendarza"><button id="tab-start" role="tab" aria-selected="true" aria-controls="view-start" tabindex="0">Start</button><button id="tab-events" role="tab" aria-selected="false" aria-controls="view-events" tabindex="-1">Wydarzenia</button><button id="tab-device" role="tab" aria-selected="false" aria-controls="view-device" tabindex="-1">Urządzenie</button></nav>
-    <div id="feedback" role="status" aria-live="polite"></div>
+
     <div id="view-start" role="tabpanel" aria-labelledby="tab-start">
     <div class="home-grid"><section class="day-card" aria-label="Aktualna data"><div id="home-month"></div><div id="home-day"></div><div id="home-weekday"></div><p id="home-date-note" class="note"></p><div id="home-mini-month"></div></section>
     <section><div class="section-bar"><h2>Nadchodzące wydarzenia</h2><button id="show-events">Zobacz wszystkie →</button></div><p class="note">Własne wydarzenia z trzech najbliższych dat — wszystkie wpisy pod wspólną datą.</p><div id="upcoming"></div></section></div>
@@ -79,7 +79,7 @@ class ECalendarPanel extends HTMLElement {
     <p class="note" id="repeat-help"></p>
     <div id="dialog-feedback" role="status" aria-live="polite"></div><div class="dialog-actions"><button id="cancel-add" type="button">Anuluj</button><button id="add" type="submit">Dodaj do kalendarza</button></div></form></dialog>
     <section id="list-view"><h2>Twoje wydarzenia <span id="count"></span></h2><div class="bar"><input id="search" type="search" placeholder="Szukaj wydarzenia…" aria-label="Szukaj wydarzenia"></div><div id="events"></div></section>
-    </div><div id="view-device" role="tabpanel" aria-labelledby="tab-device" hidden><section><h2>Urządzenie</h2><dl id="device-details"></dl><div class="bar"><button id="refresh">Pobierz wydarzenia</button><button id="refresh-data">Odśwież dane panelu</button></div><p class="note" id="connection"></p><p class="note">Odświeżenie danych panelu pobiera bieżące dane z Home Assistant. Pomiary kalendarz przesyła automatycznie co minutę.</p></section></div><div class="bar device-bar"><select id="devices" aria-label="Kalendarz"></select><span id="simple-status" role="status"></span><button id="refresh-home">Odśwież</button></div><p class="note">Wydarzenia są zapisane w kalendarzu i działają również po wyłączeniu Home Assistant. Odświeżenie ekranu e-paper może potrwać około 30 sekund.</p></main>`;
+    </div><div id="view-device" role="tabpanel" aria-labelledby="tab-device" hidden><section><h2>Urządzenie</h2><dl id="device-details"></dl><div class="bar"><button id="refresh">Pobierz wydarzenia</button><button id="refresh-data">Odśwież dane panelu</button></div><p class="note" id="connection"></p><p class="note">Odświeżenie danych panelu pobiera bieżące dane z Home Assistant. Pomiary kalendarz przesyła automatycznie co minutę.</p></section></div><div class="bar device-bar"><select id="devices" aria-label="Kalendarz"></select><span id="simple-status" role="status"></span><button id="refresh-home">Odśwież</button></div><div id="feedback" role="status" aria-live="polite"></div><p class="note">Wydarzenia są zapisane w kalendarzu i działają również po wyłączeniu Home Assistant. Odświeżenie ekranu e-paper może potrwać około 30 sekund.</p></main>`;
     this.el = id => root.getElementById(id);
     for(const key of ['temperature','humidity','pressure','pressure_sealevel'])this.el('sensor-card-'+key).onclick=()=>this.openSensor(key);
     this.activeTab='start';this.eventView='list';this.monthCursor=this.today();

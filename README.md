@@ -1,6 +1,6 @@
 # e-Calendar — Home Assistant
 
-Integracja lokalnego kalendarza e-paper z Home Assistant. Wersja 0.9.7.
+Integracja lokalnego kalendarza e-paper z Home Assistant. Wersja 0.9.8.
 
 ## Funkcje
 - Panel Start / Wydarzenia / Urządzenie.
@@ -27,7 +27,7 @@ Home Assistant 2026.3 lub nowszy, działająca integracja MQTT oraz e-Calendar p
 Panel i zmiana wydarzeń wymagają konta administratora HA.
 
 ## Przejście z instalacji ręcznej
-Zachowaj kopię /config/custom_components/ecalendar. Dodaj repozytorium do HACS, pobierz integrację i uruchom ponownie HA. Nie usuwaj istniejącego wpisu integracji ani urządzenia. Odśwież przeglądarkę Ctrl+F5 i sprawdź wersję 0.9.7 w zakładce Urządzenie.
+Zachowaj kopię /config/custom_components/ecalendar. Dodaj repozytorium do HACS, pobierz integrację i uruchom ponownie HA. Nie usuwaj istniejącego wpisu integracji ani urządzenia. Odśwież przeglądarkę Ctrl+F5 i sprawdź wersję 0.9.8 w zakładce Urządzenie.
 
 ## Aktualizacje
 Instaluj nowe wersje z HACS, następnie uruchom ponownie HA. Podmiana plików integracji nie usuwa wydarzeń zapisanych w kalendarzu.
