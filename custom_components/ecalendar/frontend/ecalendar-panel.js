@@ -1,4 +1,4 @@
-/* e-Calendar panel 0.9.6. No external dependencies or cloud requests. */
+/* e-Calendar panel 0.9.7. No external dependencies or cloud requests. */
 class ECalendarPanel extends HTMLElement {
   set hass(value) { this._hass = value; if (this.isConnected) this.start(); }
   connectedCallback() { this.start(); }
@@ -17,7 +17,7 @@ class ECalendarPanel extends HTMLElement {
     root.innerHTML = `<style>
       :host{display:block;height:100%;overflow:auto;background:var(--primary-background-color,#f4f6f9);color:var(--primary-text-color,#183149);font:16px Arial,sans-serif}
       *{box-sizing:border-box}header{display:flex;align-items:center;gap:14px;padding:12px 20px;background:var(--card-background-color,white);border-bottom:1px solid var(--divider-color,#ddd)}
-      header strong{font-size:22px}header em{color:#c31635;font-style:normal}dl{display:grid;grid-template-columns:minmax(130px,1fr) 2fr;gap:12px}dt{color:var(--secondary-text-color)}dd{margin:0;overflow-wrap:anywhere}main{max-width:1000px;margin:24px auto;padding:0 20px 40px}
+      header strong{font-size:22px}header em{color:#c31635;font-style:normal}dl{display:grid;grid-template-columns:minmax(130px,1fr) 2fr;gap:12px}dt{color:var(--secondary-text-color)}dd{margin:0;overflow-wrap:anywhere}main{--day-width:280px;max-width:1000px;margin:24px auto;padding:0 20px 40px}
       section{background:var(--card-background-color,white);border-radius:14px;padding:24px;margin:18px 0;border:1px solid var(--divider-color,#dde3eb)}
       h2{margin:0 0 18px;font-size:21px}p{line-height:1.5}label{display:block;font-size:14px;margin:0 0 7px}
       input,select{width:100%;padding:11px;border:1px solid var(--divider-color,#bdc8d5);border-radius:7px;background:var(--card-background-color,white);color:inherit;font:inherit}
@@ -29,22 +29,27 @@ class ECalendarPanel extends HTMLElement {
       .date{color:var(--primary-color,#1463ba);font-weight:bold}.name{font-weight:bold;overflow-wrap:anywhere}.details{margin-top:6px;font-size:14px;color:var(--secondary-text-color,#647a90)}
       #devices{max-width:330px}#count{font-size:14px;font-weight:normal;margin-left:10px}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--primary-color,#1463ba);outline-offset:3px}
       .tabs{display:flex;gap:8px;margin:16px 0;border-bottom:1px solid var(--divider-color,#dde3eb);padding-bottom:12px}.tabs button{background:transparent;color:var(--secondary-text-color,#647a90)}.tabs button[aria-selected="true"]{background:var(--primary-color,#1463ba);color:white}
-      .home-grid{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:stretch}.home-grid section{margin:0}.day-card{text-align:center}.day-card #home-day{font-size:112px;font-weight:600;line-height:1.1;letter-spacing:-5px;color:var(--primary-color,#1463ba);margin:12px 0}.day-card #home-weekday{font-size:22px;font-weight:bold}.day-card #home-month{font-size:19px;text-transform:capitalize}
+      .home-grid{display:grid;grid-template-columns:var(--day-width) minmax(0,1fr);gap:20px;align-items:stretch}.home-grid section{margin:0}.day-card{text-align:center}.day-card #home-day{font-size:112px;font-weight:600;line-height:1.1;letter-spacing:-5px;color:var(--primary-color,#1463ba);margin:12px 0}.day-card #home-weekday{font-size:22px;font-weight:bold}.day-card #home-month{font-size:19px;text-transform:capitalize}
       .sensors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.sensor{display:block;text-align:left;background:var(--card-background-color,white);color:inherit;padding:18px;border:1px solid var(--divider-color,#dde3eb);border-radius:12px}.sensor:not(:disabled):hover{border-color:var(--primary-color,#1463ba);background:var(--secondary-background-color,#f1f4f8)}.sensor:disabled{opacity:1;cursor:default}.sensor-link{display:block;font-size:12px;color:var(--primary-color,#1463ba);margin-top:10px}.sensor:disabled .sensor-link{color:var(--secondary-text-color,#647a90)}.sensor-label{font-size:14px;color:var(--secondary-text-color,#647a90);min-height:36px;line-height:1.3}.sensor-value{font-size:30px;font-weight:600;margin:10px 0;white-space:nowrap}.sensor-unit{font-size:14px;font-weight:normal;margin-left:5px}.sensor-note{font-size:12px;color:var(--secondary-text-color,#647a90);line-height:1.4;min-height:34px}
       .upcoming-row{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--divider-color,#dde3eb)}.upcoming-names{display:flex;flex-direction:column;gap:8px;overflow-wrap:anywhere}.section-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-bar h2{margin:0}.section-bar button{font-size:14px;background:transparent;color:var(--primary-color,#1463ba);padding:6px 0}
-      @media(max-width:850px){.home-grid{grid-template-columns:220px 1fr}.sensors{grid-template-columns:repeat(2,minmax(0,1fr))}}
-      @media(max-width:650px){.home-grid{grid-template-columns:1fr}.day-card #home-day{font-size:90px}.sensor-value{font-size:26px}.upcoming-row{grid-template-columns:100px 1fr}}
+      @media(max-width:850px){main{--day-width:220px}.home-grid{grid-template-columns:var(--day-width) minmax(0,1fr)}.sensors{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      @media(max-width:650px){main{--day-width:100%}.home-grid{grid-template-columns:1fr}.day-card #home-day{font-size:90px}.sensor-value{font-size:26px}.upcoming-row{grid-template-columns:100px 1fr}}
       @media(max-width:650px){main{padding:0 12px}.fields{grid-template-columns:1fr}section{padding:18px}.event{grid-template-columns:1fr auto;gap:10px}.date{grid-column:1 / -1}}
       .event-views{display:flex;gap:8px;margin:16px 0}.event-views button[aria-pressed="false"]{background:transparent;color:var(--primary-color,#1463ba);border:1px solid var(--divider-color,#ddd)}
       .month-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.month-toolbar h2{margin:0;text-transform:capitalize}.month-scroll{overflow-x:auto}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-width:560px;border-top:1px solid var(--divider-color,#ddd);border-left:1px solid var(--divider-color,#ddd)}
       .month-head{text-align:center;font-size:12px;font-weight:bold;padding:10px 4px;border-right:1px solid var(--divider-color,#ddd);border-bottom:1px solid var(--divider-color,#ddd)}.month-week{grid-column:1 / -1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-height:100px}.month-cell{cursor:pointer;min-height:0;min-width:0;padding:5px;border-right:1px solid var(--divider-color,#ddd);border-bottom:1px solid var(--divider-color,#ddd)}.month-cell.outside{background:var(--secondary-background-color,#eee)}.month-day{background:transparent;color:inherit;padding:4px 8px;font-size:14px;display:block;margin-bottom:5px}.month-cell.outside .month-day{color:var(--secondary-text-color,#888)}.month-day.today{background:var(--primary-color,#1463ba);color:white;border-radius:50%}.month-event{z-index:1;align-self:start;display:block;width:100%;text-align:left;padding:5px 6px;margin:4px 0;font-size:12px;line-height:1.35;overflow-wrap:anywhere}.month-detail{padding:12px;margin-top:12px;border:1px solid var(--divider-color,#ddd);border-radius:8px;line-height:1.5;white-space:pre-line}
       dialog{background:var(--card-background-color,white);color:inherit;border:1px solid var(--divider-color,#ddd);border-radius:16px;padding:24px;width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 40px);overflow:auto;box-shadow:0 12px 48px #0006}dialog::backdrop{background:#0008}dialog h2{margin:0}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.dialog-heading button{background:transparent;color:inherit;font-size:24px;padding:4px 10px}.dialog-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}#dialog-feedback:empty{display:none}#dialog-feedback{line-height:1.5;margin-top:15px}#dialog-feedback.error{color:#c31635}.event-actions{display:flex;justify-content:flex-end;margin:16px 0 20px}.time-fields{margin:18px 0}.time-fields input[type=time]{max-width:180px}#dialog-target{margin:0 0 18px}
+    .device-bar{margin-top:24px}.device-bar #devices{width:var(--day-width);max-width:100%;flex:0 1 var(--day-width)}
+    .mini-month{width:100%;table-layout:fixed;border-collapse:collapse;text-align:center;margin-top:18px;border-top:1px solid var(--divider-color,#ddd)}
+    .mini-month th{font-size:12px;font-weight:normal;color:var(--secondary-text-color);padding:12px 0 6px}
+    .mini-month td{padding:2px 0;font-size:13px}.mini-month td span{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%}
+    .mini-month .sunday{color:var(--error-color,#db5264)}.mini-month .selected span{background:var(--primary-color,#1463ba);color:var(--text-primary-color,#fff);font-weight:bold}
     header img{display:block;flex-shrink:0;width:220px;max-width:100%;height:auto;object-fit:contain}header .ec-logo-dark{display:none}:host([ec-dark]) header .ec-logo-light{display:none}:host([ec-dark]) header .ec-logo-dark{display:block}
-    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.6" alt="eCalendar" width="220" height="34"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.6" alt="eCalendar" width="220" height="34"></header>
+    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.7" alt="eCalendar" width="220" height="34"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.7" alt="eCalendar" width="220" height="34"></header>
     <main><nav class="tabs" role="tablist" aria-label="Panel kalendarza"><button id="tab-start" role="tab" aria-selected="true" aria-controls="view-start" tabindex="0">Start</button><button id="tab-events" role="tab" aria-selected="false" aria-controls="view-events" tabindex="-1">Wydarzenia</button><button id="tab-device" role="tab" aria-selected="false" aria-controls="view-device" tabindex="-1">Urządzenie</button></nav>
     <div id="feedback" role="status" aria-live="polite"></div>
-    <div class="bar"><select id="devices" aria-label="Kalendarz"></select><span id="simple-status" role="status"></span><button id="refresh-home">Odśwież</button></div><div id="view-start" role="tabpanel" aria-labelledby="tab-start">
-    <div class="home-grid"><section class="day-card" aria-label="Aktualna data"><div id="home-month"></div><div id="home-day"></div><div id="home-weekday"></div><p id="home-date-note" class="note"></p></section>
+    <div id="view-start" role="tabpanel" aria-labelledby="tab-start">
+    <div class="home-grid"><section class="day-card" aria-label="Aktualna data"><div id="home-month"></div><div id="home-day"></div><div id="home-weekday"></div><p id="home-date-note" class="note"></p><div id="home-mini-month"></div></section>
     <section><div class="section-bar"><h2>Nadchodzące wydarzenia</h2><button id="show-events">Zobacz wszystkie →</button></div><p class="note">Własne wydarzenia z trzech najbliższych dat — wszystkie wpisy pod wspólną datą.</p><div id="upcoming"></div></section></div>
     <section><h2>Pomiary w pomieszczeniu</h2><div class="sensors">
     <button type="button" id="sensor-card-temperature" class="sensor" disabled><div class="sensor-label">Temperatura</div><div class="sensor-value"><span id="sensor-temperature">—</span><span class="sensor-unit">°C</span></div><div id="sensor-note-temperature" class="sensor-note"></div><span class="sensor-link" id="sensor-link-temperature">Oczekiwanie na encję HA</span></button>
@@ -74,7 +79,7 @@ class ECalendarPanel extends HTMLElement {
     <p class="note" id="repeat-help"></p>
     <div id="dialog-feedback" role="status" aria-live="polite"></div><div class="dialog-actions"><button id="cancel-add" type="button">Anuluj</button><button id="add" type="submit">Dodaj do kalendarza</button></div></form></dialog>
     <section id="list-view"><h2>Twoje wydarzenia <span id="count"></span></h2><div class="bar"><input id="search" type="search" placeholder="Szukaj wydarzenia…" aria-label="Szukaj wydarzenia"></div><div id="events"></div></section>
-    </div><div id="view-device" role="tabpanel" aria-labelledby="tab-device" hidden><section><h2>Urządzenie</h2><dl id="device-details"></dl><div class="bar"><button id="refresh">Pobierz wydarzenia</button><button id="refresh-data">Odśwież dane panelu</button></div><p class="note" id="connection"></p><p class="note">Odświeżenie danych panelu pobiera bieżące dane z Home Assistant. Pomiary kalendarz przesyła automatycznie co minutę.</p></section></div><p class="note">Wydarzenia są zapisane w kalendarzu i działają również po wyłączeniu Home Assistant. Odświeżenie ekranu e-paper może potrwać około 30 sekund.</p></main>`;
+    </div><div id="view-device" role="tabpanel" aria-labelledby="tab-device" hidden><section><h2>Urządzenie</h2><dl id="device-details"></dl><div class="bar"><button id="refresh">Pobierz wydarzenia</button><button id="refresh-data">Odśwież dane panelu</button></div><p class="note" id="connection"></p><p class="note">Odświeżenie danych panelu pobiera bieżące dane z Home Assistant. Pomiary kalendarz przesyła automatycznie co minutę.</p></section></div><div class="bar device-bar"><select id="devices" aria-label="Kalendarz"></select><span id="simple-status" role="status"></span><button id="refresh-home">Odśwież</button></div><p class="note">Wydarzenia są zapisane w kalendarzu i działają również po wyłączeniu Home Assistant. Odświeżenie ekranu e-paper może potrwać około 30 sekund.</p></main>`;
     this.el = id => root.getElementById(id);
     for(const key of ['temperature','humidity','pressure','pressure_sealevel'])this.el('sensor-card-'+key).onclick=()=>this.openSensor(key);
     this.activeTab='start';this.eventView='list';this.monthCursor=this.today();
@@ -241,13 +246,30 @@ class ECalendarPanel extends HTMLElement {
     }
     return [...groups.entries()].sort((a,b)=>a[0]-b[0]).slice(0,3).map(([,group])=>group);
   }
+  miniMonth(date){
+    const offset=(new Date(Date.UTC(date.year,date.month-1,1)).getUTCDay()+6)%7;
+    const count=new Date(Date.UTC(date.year,date.month,0)).getUTCDate();
+    const cells=Math.ceil((offset+count)/7)*7;
+    let html='<table class="mini-month" aria-label="Widok miesiąca"><thead><tr>';
+    for(const day of ['Pn','Wt','Śr','Cz','Pt','So','Nd'])html+='<th scope="col">'+day+'</th>';
+    html+='</tr></thead><tbody>';
+    for(let i=0;i<cells;i++){
+      if(i%7===0)html+='<tr>';
+      const day=i-offset+1,valid=day>=1&&day<=count;
+      const cls=valid&&day===date.day?'selected':i%7===6?'sunday':'';
+      html+='<td class="'+cls+'">'+(valid?'<span'+(day===date.day?' aria-current="date"':'')+'>'+day+'</span>':'')+'</td>';
+      if(i%7===6)html+='</tr>';
+    }
+    return html+'</tbody></table>';
+  }
   renderHome(){
     const today=this.today(),civil=new Date(Date.UTC(today.year,today.month-1,today.day));
     this.el('home-month').textContent=new Intl.DateTimeFormat('pl-PL',{month:'long',year:'numeric',timeZone:'UTC'}).format(civil);
     this.el('home-day').textContent=today.day;
     const weekday=new Intl.DateTimeFormat('pl-PL',{weekday:'long',timeZone:'UTC'}).format(civil);
     this.el('home-weekday').textContent=weekday[0].toLocaleUpperCase('pl')+weekday.slice(1);
-    this.el('home-date-note').textContent=`${this.formatDate(today)} • Ten miesiąc ma ${new Date(Date.UTC(today.year,today.month,0)).getUTCDate()} dni`;
+    this.el('home-date-note').textContent=this.formatDate(today);
+    this.el('home-mini-month').innerHTML=this.miniMonth(today);
     const device=this.selected(),container=this.el('upcoming');container.replaceChildren();
     if(!device?.state){const p=document.createElement('p');p.className='note';p.textContent='Oczekiwanie na wydarzenia z kalendarza.';container.append(p);}
     else{
