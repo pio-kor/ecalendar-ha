@@ -40,7 +40,7 @@ async def async_setup_entry(hass, entry):
         if not store["panel"]:
             await panel_custom.async_register_panel(
                 hass=hass, webcomponent_name="ecalendar-panel", frontend_url_path="ecalendar",
-                module_url="/ecalendar_static/ecalendar-panel.js?v=0.9.4",
+                module_url="/ecalendar_static/ecalendar-panel.js?v=0.9.6",
                 sidebar_title="e-Calendar", sidebar_icon="mdi:calendar",
                 embed_iframe=False, require_admin=True,
             )
@@ -122,7 +122,7 @@ async def ws_refresh(hass, connection, message):
                                 vol.Required("month"): int, vol.Required("day"): int,
                                 vol.Required("advance_days"): int,
                                 vol.Optional("repeat"): int, vol.Optional("monthly_occurrence"): int,
-                                vol.Optional("monthly_weekday"): int, vol.Optional("anniversary"): bool,
+                                vol.Optional("monthly_weekday"): int, vol.Optional("anniversary"): bool, vol.Optional("short_month_last_day"): bool,
                                 vol.Optional("anniversary_base"): int, vol.Optional("time_minutes"): int,
                                 vol.Optional("end_days"): int, vol.Optional("end_time_minutes"): int})
 @websocket_api.async_response
@@ -140,7 +140,7 @@ async def ws_delete(hass, connection, message):
                                 vol.Required("month"): int, vol.Required("day"): int,
                                 vol.Required("advance_days"): int,
                                 vol.Optional("repeat"): int, vol.Optional("monthly_occurrence"): int,
-                                vol.Optional("monthly_weekday"): int, vol.Optional("anniversary"): bool,
+                                vol.Optional("monthly_weekday"): int, vol.Optional("anniversary"): bool, vol.Optional("short_month_last_day"): bool,
                                 vol.Optional("anniversary_base"): int, vol.Optional("time_minutes"): int,
                                 vol.Optional("end_days"): int, vol.Optional("end_time_minutes"): int})
 @websocket_api.async_response

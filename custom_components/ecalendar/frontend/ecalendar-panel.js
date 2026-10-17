@@ -1,4 +1,4 @@
-/* e-Calendar panel 0.9.4. No external dependencies or cloud requests. */
+/* e-Calendar panel 0.9.6. No external dependencies or cloud requests. */
 class ECalendarPanel extends HTMLElement {
   set hass(value) { this._hass = value; if (this.isConnected) this.start(); }
   connectedCallback() { this.start(); }
@@ -39,8 +39,8 @@ class ECalendarPanel extends HTMLElement {
       .month-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.month-toolbar h2{margin:0;text-transform:capitalize}.month-scroll{overflow-x:auto}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-width:560px;border-top:1px solid var(--divider-color,#ddd);border-left:1px solid var(--divider-color,#ddd)}
       .month-head{text-align:center;font-size:12px;font-weight:bold;padding:10px 4px;border-right:1px solid var(--divider-color,#ddd);border-bottom:1px solid var(--divider-color,#ddd)}.month-week{grid-column:1 / -1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));min-height:100px}.month-cell{cursor:pointer;min-height:0;min-width:0;padding:5px;border-right:1px solid var(--divider-color,#ddd);border-bottom:1px solid var(--divider-color,#ddd)}.month-cell.outside{background:var(--secondary-background-color,#eee)}.month-day{background:transparent;color:inherit;padding:4px 8px;font-size:14px;display:block;margin-bottom:5px}.month-cell.outside .month-day{color:var(--secondary-text-color,#888)}.month-day.today{background:var(--primary-color,#1463ba);color:white;border-radius:50%}.month-event{z-index:1;align-self:start;display:block;width:100%;text-align:left;padding:5px 6px;margin:4px 0;font-size:12px;line-height:1.35;overflow-wrap:anywhere}.month-detail{padding:12px;margin-top:12px;border:1px solid var(--divider-color,#ddd);border-radius:8px;line-height:1.5;white-space:pre-line}
       dialog{background:var(--card-background-color,white);color:inherit;border:1px solid var(--divider-color,#ddd);border-radius:16px;padding:24px;width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 40px);overflow:auto;box-shadow:0 12px 48px #0006}dialog::backdrop{background:#0008}dialog h2{margin:0}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.dialog-heading button{background:transparent;color:inherit;font-size:24px;padding:4px 10px}.dialog-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}#dialog-feedback:empty{display:none}#dialog-feedback{line-height:1.5;margin-top:15px}#dialog-feedback.error{color:#c31635}.event-actions{display:flex;justify-content:flex-end;margin:16px 0 20px}.time-fields{margin:18px 0}.time-fields input[type=time]{max-width:180px}#dialog-target{margin:0 0 18px}
-    header img{flex-shrink:0;object-fit:contain}header .ec-logo-dark{display:none}:host([ec-dark]) header .ec-logo-light{display:none}:host([ec-dark]) header .ec-logo-dark{display:block}
-    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.4" alt="" width="40" height="40"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.4" alt="" width="40" height="40"><strong><em>e</em>-Calendar</strong></header>
+    header img{display:block;flex-shrink:0;width:220px;max-width:100%;height:auto;object-fit:contain}header .ec-logo-dark{display:none}:host([ec-dark]) header .ec-logo-light{display:none}:host([ec-dark]) header .ec-logo-dark{display:block}
+    </style><header><img class="ec-logo-light" src="/ecalendar_static/ecalendar-logo-light.png?v=0.9.6" alt="eCalendar" width="220" height="34"><img class="ec-logo-dark" src="/ecalendar_static/ecalendar-logo-dark.png?v=0.9.6" alt="eCalendar" width="220" height="34"></header>
     <main><nav class="tabs" role="tablist" aria-label="Panel kalendarza"><button id="tab-start" role="tab" aria-selected="true" aria-controls="view-start" tabindex="0">Start</button><button id="tab-events" role="tab" aria-selected="false" aria-controls="view-events" tabindex="-1">Wydarzenia</button><button id="tab-device" role="tab" aria-selected="false" aria-controls="view-device" tabindex="-1">Urządzenie</button></nav>
     <div id="feedback" role="status" aria-live="polite"></div>
     <div class="bar"><select id="devices" aria-label="Kalendarz"></select><span id="simple-status" role="status"></span><button id="refresh-home">Odśwież</button></div><div id="view-start" role="tabpanel" aria-labelledby="tab-start">
@@ -59,9 +59,9 @@ class ECalendarPanel extends HTMLElement {
     <dialog id="add-dialog" aria-labelledby="add-title"><div class="dialog-heading"><h2 id="add-title">Dodaj wydarzenie</h2><button type="button" id="close-add" aria-label="Zamknij">×</button></div><p class="note" id="dialog-target"></p><form id="form"><div class="fields">
     <div><label for="name">Nazwa wydarzenia</label><input id="name" required maxlength="160" placeholder="np. Wizyta u weterynarza"></div>
     <div id="event-date-field"><label id="event-date-label" for="date">Początek — data</label><input id="date" type="date" min="2000-01-01" max="2099-12-31" required></div>
-    <div><label for="end-date">Koniec — data</label><input id="end-date" type="date" min="2000-01-01" max="2099-12-31"><p class="note">Puste pole: ten sam dzień. Dla całego dnia wybierz ostatni dzień włącznie.</p></div>
+    <div><label for="end-date">Koniec — data</label><input id="end-date" type="date" min="2000-01-01" max="2099-12-31"><p class="note">Pozostaw puste, jeśli wydarzenie kończy się tego samego dnia.</p></div>
     <div><label for="advance">Wyświetlaj wcześniej</label><select id="advance"></select></div></div>
-    <div class="time-fields"><label class="check" for="all-day"><input id="all-day" type="checkbox" checked> Cały dzień</label><div id="time-wrapper" hidden><label for="event-time">Początek — godzina</label><input id="event-time" type="time" step="60" disabled><label for="end-time">Koniec — godzina</label><input id="end-time" type="time" step="60" disabled><p class="note">Godziny mogą uruchamiać automatyzacje HA. Ekran e-paper pokazuje wydarzenie według dat i nie odświeża się o każdej podanej godzinie.</p></div></div>
+    <div class="time-fields"><label class="check" for="all-day"><input id="all-day" type="checkbox" checked> Wydarzenie całodniowe</label><div id="time-wrapper" hidden><label for="event-time">Początek — godzina</label><input id="event-time" type="time" step="60" disabled><label for="end-time">Koniec — godzina</label><input id="end-time" type="time" step="60" disabled><p class="note">Godziny mogą uruchamiać automatyzacje HA. Ekran e-paper pokazuje wydarzenie według dat i nie odświeża się o każdej podanej godzinie.</p></div></div>
     <div class="options"><label for="repeat">Powtarzanie</label><select id="repeat">
     <option value="0">Brak — jednorazowo</option><option value="1">Co tydzień</option><option value="2">Co miesiąc</option><option value="3">Co rok</option><option value="4">Wybrany dzień tygodnia w miesiącu</option></select></div>
     <div id="monthly" class="options fields" hidden><div><label for="occurrence">Który w miesiącu</label><select id="occurrence">
@@ -70,6 +70,7 @@ class ECalendarPanel extends HTMLElement {
     <div id="annual" class="options" hidden><label class="check" for="anniversary"><input id="anniversary" type="checkbox"> Urodziny / rocznica — zwiększaj liczbę o 1 co rok</label>
     <div id="anniversary-value" hidden><label for="anniversary-base">Wiek / numer rocznicy w roku początkowym</label><input id="anniversary-base" type="number" min="0" max="250" step="1" value="0">
     <p class="note">Np. data 07.10.2026 i wartość 40 oznacza 40 w 2026 roku oraz 41 w 2027 roku. Możesz też podać datę urodzenia lub ślubu i wartość 0, jeśli data mieści się w latach 2000–2099.</p></div></div>
+    <div id="short-month-option" class="options" hidden><label class="check"><input id="short-month" type="checkbox"> W krótszych miesiącach przypominaj w ostatnim dniu miesiąca</label></div>
     <p class="note" id="repeat-help"></p>
     <div id="dialog-feedback" role="status" aria-live="polite"></div><div class="dialog-actions"><button id="cancel-add" type="button">Anuluj</button><button id="add" type="submit">Dodaj do kalendarza</button></div></form></dialog>
     <section id="list-view"><h2>Twoje wydarzenia <span id="count"></span></h2><div class="bar"><input id="search" type="search" placeholder="Szukaj wydarzenia…" aria-label="Szukaj wydarzenia"></div><div id="events"></div></section>
@@ -89,7 +90,7 @@ class ECalendarPanel extends HTMLElement {
     const today=this.today();this.el('date').value=`${today.year}-${String(today.month).padStart(2,'0')}-${String(today.day).padStart(2,'0')}`;
     this.el('devices').onchange=()=>this.render();this.el('search').oninput=()=>this.renderEvents();
     this.el('refresh').onclick=()=>this.act('refresh',{});this.el('refresh-home').onclick=()=>this.act('refresh',{});this.el('refresh-data').onclick=()=>this.poll();
-    this.el('repeat').onchange=()=>this.updateOptions();this.el('anniversary').onchange=()=>this.updateOptions();this.updateOptions();
+    this.el('repeat').onchange=()=>this.updateOptions();this.el('short-month').onchange=()=>this.updateOptions();this.el('anniversary').onchange=()=>this.updateOptions();this.updateOptions();
     this.el('open-add').onclick=()=>this.openAdd();
     this.el('close-add').onclick=()=>this.closeAdd();this.el('cancel-add').onclick=()=>this.closeAdd();
     this.el('add-dialog').addEventListener('cancel',event=>{if(this.busy)event.preventDefault();});
@@ -123,7 +124,7 @@ class ECalendarPanel extends HTMLElement {
     this._ecalendarEventEdit={index:event.index,revision:d.state.revision};
     this.el('add-title').textContent='Edytuj wydarzenie';this.el('add').textContent='Zapisz zmiany';
     const iso=x=>`${x.year}-${String(x.month).padStart(2,'0')}-${String(x.day).padStart(2,'0')}`;
-    this.el('name').value=event.name;this.el('date').value=iso(event);this.el('advance').value=String(event.advance_days);this.el('repeat').value=String(event.repeat||0);this.el('occurrence').value=String(event.monthly_occurrence||1);this.el('weekday').value=String(event.monthly_weekday??1);this.el('anniversary').checked=!!event.anniversary;this.el('anniversary-base').value=event.anniversary_base||0;
+    this.el('name').value=event.name;this.el('date').value=iso(event);this.el('advance').value=String(event.advance_days);this.el('repeat').value=String(event.repeat||0);this.el('occurrence').value=String(event.monthly_occurrence||1);this.el('weekday').value=String(event.monthly_weekday??1);this.el('anniversary').checked=!!event.anniversary;this.el('short-month').checked=event.short_month_last_day===true;this.el('anniversary-base').value=event.anniversary_base||0;
     this.el('all-day').checked=!(event.time_minutes>=0);this.el('event-time').value=this.timeLabel(event);
     let end=this.shiftDate(event,event.end_days||0),minutes=event.end_time_minutes??-1;
     if(event.time_minutes>=0&&minutes<0){minutes=(event.time_minutes+1)%1440;if(minutes===0)end=this.shiftDate(end,1);}
@@ -275,11 +276,12 @@ class ECalendarPanel extends HTMLElement {
     if(dateField)dateField.hidden=repeat===4;
     this.el('date').required=repeat!==4;
     if(repeat===4&&!this._ecalendarEventEdit){const today=this.today();this.el('date').value=`${today.year}-${String(today.month).padStart(2,'0')}-${String(today.day).padStart(2,'0')}`;}
+    this.el('short-month-option').hidden=![2,3].includes(repeat);this.el('short-month').disabled=![2,3].includes(repeat);if(![2,3].includes(repeat))this.el('short-month').checked=false;
     this.el('monthly').hidden=repeat!==4;this.el('annual').hidden=!annual;
     this.el('anniversary-value').hidden=!annual||!this.el('anniversary').checked;
     this.el('anniversary-base').required=annual&&this.el('anniversary').checked;
     this.el('anniversary-base').disabled=!annual||!this.el('anniversary').checked;
-    this.el('repeat-help').textContent=repeat===4?'Wybierz wystąpienie i dzień tygodnia. Kalendarz sam wyznaczy terminy — nie musisz podawać daty.':repeat===2?'Powtarzanie w tym samym dniu miesiąca. Miesiące bez tego dnia są pomijane.':repeat===3?'Powtarzanie w tym samym dniu i miesiącu. 29 lutego występuje tylko w latach przestępnych.':repeat===1?'Powtarzanie co 7 dni od podanej daty.':'';
+    this.el('repeat-help').textContent=repeat===4?'Wybierz wystąpienie i dzień tygodnia. Kalendarz sam wyznaczy terminy — nie musisz podawać daty.':repeat===2?(this.el('short-month').checked?'W krótszym miesiącu użyj ostatniego dnia. Oryginalna data pozostaje bez zmian.':'Miesiące bez wybranego dnia są pomijane.'):repeat===3?(this.el('short-month').checked?'29 lutego będzie przypominany 28 lutego w roku nieprzestępnym.':'29 lutego występuje tylko w latach przestępnych.'):repeat===1?'Powtarzanie co 7 dni od podanej daty.':'';
   }
   formPayload(){
     const [year,month,day]=this.el('date').value.split('-').map(Number),repeat=Number(this.el('repeat').value);
@@ -288,6 +290,7 @@ class ECalendarPanel extends HTMLElement {
     const payload={name:this.el('name').value,year,month,day,advance_days:Number(this.el('advance').value),repeat,
       monthly_occurrence:repeat===4?Number(this.el('occurrence').value):1,
       monthly_weekday:repeat===4?Number(this.el('weekday').value):1,
+      short_month_last_day:[2,3].includes(repeat)&&this.el('short-month').checked,
       anniversary,anniversary_base:anniversary?Number(this.el('anniversary-base').value):0};
     if(timeMinutes!==-1)payload.time_minutes=timeMinutes;
     const endText=this.el('end-date')?.value||this.el('date').value;
@@ -388,7 +391,7 @@ class ECalendarPanel extends HTMLElement {
     const startDate=new Date(start),year=startDate.getUTCFullYear(),month=startDate.getUTCMonth()+1;
     if(event.repeat===3){
       for(let y=year;y<=year+8;y++){
-        const candidate=valid(y,event.month,event.day);
+        const candidate=valid(y,event.month,event.short_month_last_day?Math.min(event.day,new Date(Date.UTC(y,event.month,0)).getUTCDate()):event.day);
         if(candidate&&candidate.getTime()>=start)return tuple(candidate);
       }
     }
@@ -405,6 +408,7 @@ class ECalendarPanel extends HTMLElement {
             day=last.getUTCDate()-(last.getUTCDay()-weekday+7)%7;
           }else day=1+(weekday-first.getUTCDay()+7)%7+(occurrence-1)*7;
         }
+        if(event.repeat===2&&event.short_month_last_day)day=Math.min(day,new Date(Date.UTC(y,m,0)).getUTCDate());
         const candidate=valid(y,m,day);
         if(candidate&&candidate.getTime()>=start)return tuple(candidate);
       }
@@ -415,6 +419,7 @@ class ECalendarPanel extends HTMLElement {
     const repeat={0:'Brak',1:'Co tydzień',2:'Co miesiąc',3:'Co rok',4:'Wybrany dzień tygodnia w miesiącu'};
     let text=`Wyświetlaj: ${event.advance_days?`${event.advance_days} dni wcześniej`:'w dniu wydarzenia'} • Powtarzanie: ${repeat[event.repeat]??event.repeat}`;
     if(event.repeat===4){const days=['Niedziela','Poniedziałek','Wtorek','Środa','Czwartek','Piątek','Sobota'];text+=` (${event.monthly_occurrence===5?'ostatni':event.monthly_occurrence+'.'}: ${days[event.monthly_weekday]||event.monthly_weekday})`;}
+    if(event.short_month_last_day)text+=' • W krótszym miesiącu: ostatni dzień';
     if(event.anniversary)text+=` • Wartość początkowa: ${event.anniversary_base} w ${event.year} roku`;
     return text;
   }

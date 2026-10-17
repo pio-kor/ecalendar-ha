@@ -1,7 +1,7 @@
 {
   "domain": "ecalendar",
   "name": "e-Calendar",
-  "version": "0.9.4",
+  "version": "0.9.6",
   "config_flow": true,
   "dependencies": [
     "mqtt",

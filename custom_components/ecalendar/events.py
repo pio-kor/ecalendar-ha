@@ -24,7 +24,7 @@ def next_date(event, after):
             while y <= 2099:
                 last = calendar.monthrange(y, m)[1]
                 if repeat == 2:
-                    day = base.day
+                    day = min(base.day,last) if event.get("short_month_last_day",False) else base.day
                 else:
                     weekday = event.get("monthly_weekday", 1)
                     occurrence = event.get("monthly_occurrence", 1)
@@ -45,7 +45,7 @@ def next_date(event, after):
         if repeat == 3:
             for y in range(lower.year, 2100):
                 try:
-                    candidate = date(y,base.month,base.day)
+                    candidate = date(y,base.month,min(base.day,calendar.monthrange(y,base.month)[1]) if event.get("short_month_last_day",False) else base.day)
                 except ValueError:
                     continue
                 if candidate >= lower:

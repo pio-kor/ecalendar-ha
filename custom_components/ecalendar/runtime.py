@@ -39,6 +39,9 @@ def validate_add(data):
         raise CalendarError("Nieprawidłowe opcje powtarzania lub wartość rocznicy (0–250).")
     if anniversary and repeat != 3:
         raise CalendarError("Obliczanie wieku lub rocznicy wymaga powtarzania co rok.")
+    short_month = data.get("short_month_last_day", False)
+    if type(short_month) is not bool or (short_month and repeat not in (2, 3)):
+        raise CalendarError("Opcja ostatniego dnia miesiąca wymaga powtarzania co miesiąc lub co rok.")
     time_minutes = data.get("time_minutes", -1)
     if type(time_minutes) is not int or not -1 <= time_minutes <= 1439:
         raise CalendarError("Nieprawidłowa godzina wydarzenia.")
@@ -46,6 +49,8 @@ def validate_add(data):
                 repeat=repeat, monthly_occurrence=occurrence if repeat == 4 else 1,
                 monthly_weekday=weekday if repeat == 4 else 1,
                 anniversary=anniversary, anniversary_base=anniversary_base if anniversary else 0)
+    if "short_month_last_day" in data:
+        result["short_month_last_day"] = short_month
     if time_minutes >= 0:
         result["time_minutes"] = time_minutes
     if "end_days" in data or "end_time_minutes" in data:
@@ -207,6 +212,8 @@ class CalendarRuntime:
             if any(not isinstance(event, dict) or type(event.get("index")) is not int or event["index"] != i for i, event in enumerate(events)):
                 return
             for event in events:
+                flag=event.get("short_month_last_day",False)
+                if type(flag) is not bool or (flag and event.get("repeat") not in (2,3)):return
                 days=event.get("end_days",0);minutes=event.get("end_time_minutes",-1)
                 if type(days) is not int or not 0<=days<=366 or type(minutes) is not int or not -1<=minutes<1440:return
             if isinstance(data.get("device"),dict):
@@ -292,6 +299,8 @@ class CalendarRuntime:
                 raise CalendarError("Zaktualizuj oprogramowanie kalendarza, aby zapisywać wydarzenia z godziną.")
             if action in ("add","update") and ("end_days" in payload or "end_time_minutes" in payload) and current.get("supports_duration") is not True:
                 raise CalendarError("Najpierw zaktualizuj oprogramowanie e-Calendar do wersji obsługującej początek i koniec wydarzeń.")
+            if action in ("add", "update") and payload.get("short_month_last_day") and current.get("supports_short_month") is not True:
+                raise CalendarError("Najpierw zaktualizuj firmware e-Calendar do wersji obsługującej krótsze miesiące.")
             if action=="update" and current.get("supports_update") is not True:
                 raise CalendarError("Zaktualizuj firmware e-Calendar, aby edytować wydarzenia.")
             if action in ("delete","update") and (current["revision"] != payload["revision"] or payload["index"] >= current["count"]):

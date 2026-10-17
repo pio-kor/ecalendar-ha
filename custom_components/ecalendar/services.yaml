@@ -58,6 +58,12 @@ add_event:
             - {value: "2", label: Co miesiąc}
             - {value: "3", label: Co rok}
             - {value: "4", label: Wybrany dzień tygodnia w miesiącu}
+    short_month_last_day:
+      name: W krótszych miesiącach przypominaj w ostatnim dniu miesiąca
+      description: Tylko dla powtarzania co miesiąc lub co rok. Oryginalna data pozostaje bez zmian.
+      default: false
+      selector:
+        boolean:
     monthly_occurrence:
       name: Który dzień w miesiącu
       description: Tylko dla reguły miesięcznej.

@@ -2,5 +2,5 @@
 DOMAIN = "ecalendar"
 TIMEOUT = 50
 
-VERSION = "0.9.4"
+VERSION = "0.9.6"
 MEASUREMENT_TIMEOUT = 300  # five missed one-minute samples

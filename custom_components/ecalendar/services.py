@@ -48,6 +48,8 @@ def register_services(hass):
                              "anniversary":call.data.get("anniversary",False),
                              "anniversary_base":int(call.data.get("anniversary_base",0))}
                     value=call.data.get("time","")
+                    if "short_month_last_day" in call.data:
+                        payload["short_month_last_day"] = call.data["short_month_last_day"]
                     if value:
                         hour=time.fromisoformat(value)
                         if hour.second or hour.microsecond or hour.tzinfo:
@@ -78,5 +80,5 @@ def register_services(hass):
         vol.Required("name"):str,vol.Required("date"):str,
         vol.Optional("time"):str,vol.Optional("end_date"):str,vol.Optional("end_time"):str,vol.Optional("advance_days") :vol.Any(int,str),
         vol.Optional("repeat"):vol.Any(int,str),vol.Optional("monthly_occurrence"):vol.Any(int,str),
-        vol.Optional("monthly_weekday"):vol.Any(int,str),vol.Optional("anniversary"):bool,
+        vol.Optional("monthly_weekday"):vol.Any(int,str),vol.Optional("anniversary"):bool,vol.Optional("short_month_last_day"):bool,
         vol.Optional("anniversary_base"):vol.Any(int,float)}))
